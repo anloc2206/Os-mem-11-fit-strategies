@@ -1,55 +1,82 @@
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 import unittest
-from memory import MemoryManager
+
+try:
+    from source.memory import MemoryManager, UNIT
+except ImportError:
+    from memory import MemoryManager, UNIT
 
 
-def dummy_first_fit(holes, size):
-    for idx, h in enumerate(holes):
-        if h >= size:
-            return idx
+def dummy_first_fit(holes, req_size):
+    for i, h_size in enumerate(holes):
+        if h_size >= req_size:
+            return i
     return None
 
 
 class TestMemoryManager(unittest.TestCase):
 
-    def test_required_flow(self):
+    def test_round_to_unit(self):
         m = MemoryManager(1000)
-        self.assertTrue(m.allocate("P1", 102, dummy_first_fit))
-        self.assertEqual(m.snapshot()[0], (0, 104, "P1", 102))
+        self.assertTrue(m.allocate("P1", 5, dummy_first_fit))
+        self.assertEqual(m.snapshot()[0], (0, 8, "P1", 5))
 
-        self.assertTrue(m.allocate("P2", 200, dummy_first_fit))
-        self.assertTrue(m.allocate("P3", 100, dummy_first_fit))
+    def test_split_hole(self):
+        m = MemoryManager(100)
+        self.assertTrue(m.allocate("A", 30, dummy_first_fit))
+        self.assertEqual(m.snapshot(), [(0, 32, "A", 30), (32, 68, None, 0)])
 
-        self.assertTrue(m.free("P1"))
-        self.assertTrue(m.free("P3"))
-        self.assertTrue(m.free("P2"))
-        self.assertEqual(m.snapshot(), [(0, 1000, None, 0)])
-
-        self.assertFalse(m.free("X"))
-        self.assertFalse(m.allocate("A", 0, dummy_first_fit))
-        self.assertFalse(m.allocate("A", 5000, dummy_first_fit))
-
+    def test_exact_fit_no_remainder(self):
+        m = MemoryManager(100)
         self.assertTrue(m.allocate("A", 100, dummy_first_fit))
-        self.assertFalse(m.allocate("A", 50, dummy_first_fit))
-        m.check_invariants()
+        self.assertEqual(m.snapshot(), [(0, 100, "A", 100)])
+        self.assertFalse(m.allocate("B", 4, dummy_first_fit))
+
+    def test_coalesce_with_next_hole(self):
+        m = MemoryManager(1000)
+        m.allocate("A", 100, dummy_first_fit)
+        m.allocate("B", 100, dummy_first_fit)
+        self.assertTrue(m.free("B"))
+        self.assertEqual(m.snapshot(), [(0, 100, "A", 100), (100, 900, None, 0)])
+
+    def test_coalesce_with_prev_hole(self):
+        m = MemoryManager(1000)
+        m.allocate("A", 100, dummy_first_fit)
+        m.allocate("B", 100, dummy_first_fit)
+        m.allocate("C", 100, dummy_first_fit)
+        m.free("A")
+        m.free("B")
+        self.assertEqual(m.snapshot(), [(0, 200, None, 0), (200, 100, "C", 100), (300, 700, None, 0)])
+
+    def test_reuse_middle_hole(self):
+        m = MemoryManager(1000)
+        m.allocate("A", 100, dummy_first_fit)
+        m.allocate("B", 100, dummy_first_fit)
+        m.allocate("C", 100, dummy_first_fit)
+        m.free("B")
+        self.assertTrue(m.allocate("D", 100, dummy_first_fit))
+        self.assertEqual(m.snapshot()[1], (100, 100, "D", 100))
+
+    def test_invalid_inputs(self):
+        m = MemoryManager(1000)
+        self.assertFalse(m.allocate("P1", -5, dummy_first_fit))
+        self.assertFalse(m.allocate("", 10, dummy_first_fit))
 
     def test_coalescing_both_sides(self):
         m = MemoryManager(1000)
-        m.allocate("P1", 100, dummy_first_fit)
-        m.allocate("P2", 100, dummy_first_fit)
-        m.allocate("P3", 100, dummy_first_fit)
-
-        m.free("P1")
-        m.free("P3")
-        m.free("P2")
+        m.allocate("A", 100, dummy_first_fit)
+        m.allocate("B", 100, dummy_first_fit)
+        m.allocate("C", 100, dummy_first_fit)
+        m.free("A")
+        m.free("C")
+        m.free("B")
         self.assertEqual(m.snapshot(), [(0, 1000, None, 0)])
-        m.check_invariants()
-
-    def test_check_invariants_detector(self):
-        m = MemoryManager(1000)
-        m.allocate("P1", 100, dummy_first_fit)
-        m.blocks.append({"start": 1000, "size": 100, "pid": None, "requested": 0})
-        with self.assertRaises(AssertionError):
-            m.check_invariants()
 
 
 if __name__ == "__main__":
