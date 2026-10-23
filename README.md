@@ -65,10 +65,10 @@ trách nhiệm chính và một người kiểm tra chéo.
 
 | Tuần | Nội dung | Trạng thái |
 |---|---|---|
-| 1 | Chọn đề tài, phân vai, đặc tả và repo | Đang thực hiện |
-| 2 | Mô hình/pseudocode và test oracle | Chưa bắt đầu |
-| 3–4 | Hiện thực lõi thuật toán | Chưa bắt đầu |
-| 5 | GUI, CSV, trực quan hóa | Chưa bắt đầu |
+| 1 | Chọn đề tài, phân vai, đặc tả và repo | Đã thực hiện|
+| 2 | Mô hình/pseudocode và test oracle | Đã thực hiện |
+| 3–4 | Hiện thực lõi thuật toán | Đã thực hiện |
+| 5 | GUI, CSV, trực quan hóa | Đang tiến hành |
 | 6 | Kiểm thử đúng đắn và hiệu năng | Chưa bắt đầu |
 | 7 | Hoàn thiện, review chéo và sửa lỗi | Chưa bắt đầu |
 | 8 | Báo cáo, video, demo và bảo vệ ngắn | Chưa bắt đầu |
