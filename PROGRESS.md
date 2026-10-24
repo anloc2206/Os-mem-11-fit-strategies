@@ -21,7 +21,7 @@ Nhóm: OS_2627102_08
 
 - [ ] **Tuần 5: Giao diện GUI, CSV và Trực quan hóa**
   - [x] Hoàn thành giao diện Tkinter (`gui.py`)
-  - [ ] Hiện thực đọc/kiểm tra lỗi file CSV (`io_csv.py`) và bộ mô phỏng (`simulator.py`)
+  - [x] Hiện thực đọc/kiểm tra lỗi file CSV (`io_csv.py`) và bộ mô phỏng (`simulator.py`)
 
 - [ ] **Tuần 6: Kiểm thử đúng đắn và Hiệu năng**
   - [ ] Viết kiểm thử tích hợp và kiểm thử biên (`test_integration.py`)
