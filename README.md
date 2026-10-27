@@ -15,7 +15,7 @@ phân mảnh trong/ngoài và so sánh 3 chiến lược.
 |---|---|---|---|
 | 1 | Hồ An Lộc | 082207006118    | anloc2206 |
 | 2 | Trần Huy Bảo | Đang cập nhật |
-| 3 | Vũ Minh Khôi  | Đang cập nhật |
+| 3 | Vũ Minh Khôi  | 075207011378  | khoiminhvu2303-sudo |
 | 4 | Phạm Minh Tân |  Đang cập nhật |
 | 5 | Nguyễn Hưng Duy | Đang cập nhật |
 
