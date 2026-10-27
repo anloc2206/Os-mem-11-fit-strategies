@@ -21,19 +21,15 @@ phân mảnh trong/ngoài và so sánh 3 chiến lược.
 
 ## 2. Phân công công việc
 
-Dự án được chia thành 5 mảng việc. Nhóm sẽ chốt người phụ trách từng mảng
-dựa trên thế mạnh của từng thành viên sau buổi họp nhóm đầu tiên, và cập
-nhật lại bảng này trong README ngay sau đó. Mỗi mảng có một người chịu
-trách nhiệm chính và một người kiểm tra chéo.
+Dự án được chia thành 5 mảng việc nhằm đảm bảo khối lượng lập trình và báo cáo cân bằng cho cả 5 thành viên. Mỗi mảng có một người chịu trách nhiệm chính và một người kiểm tra chéo (review chéo mã nguồn của nhau trước khi gộp nhánh).
 
 | Mảng việc | Nội dung chính | Người phụ trách |
 |---|---|---|
-| A. Lõi bộ nhớ | Cấu trúc block, cấp phát, tách block, thu hồi và gộp lỗ trống | Sẽ chốt sau họp nhóm |
-| B. Chiến lược và phân mảnh | First-Fit, Best-Fit, Worst-Fit, tính phân mảnh trong/ngoài | Sẽ chốt sau họp nhóm |
-| C. Giao diện | Vẽ memory map, nhập yêu cầu, hiển thị số liệu và biểu đồ | Sẽ chốt sau họp nhóm |
-| D. Kiểm thử và hiệu năng | Bộ test, workload ngẫu nhiên, đo hiệu năng, xuất CSV | Sẽ chốt sau họp nhóm |
-| E. Điều phối và báo cáo | Quản lý repo, tiến độ, review, tổng hợp báo cáo và video | Trưởng nhóm |
-
+| **A. Lõi bộ nhớ** | Cấu trúc block, hàm cấp phát, tách block, thu hồi và gộp lỗ trống | Trần Huy Bảo |
+| **B. Chiến lược và thuật toán** | Xây dựng logic First-Fit, Best-Fit, Worst-Fit và tính phân mảnh | Vũ Minh Khôi |
+| **C. Giao diện và Điều phối** | Code giao diện Tkinter (memory map) và quản lý tiến độ, repo chung | Hồ An Lộc (Leader) |
+| **D. Mô phỏng và xử lý dữ liệu** | Đọc/ghi file input/output CSV, kết nối Simulator chạy luồng chính | Phạm Minh Tân |
+| **E. Kiểm thử và hiệu năng** | Viết test tích hợp, sinh workload ngẫu nhiên, đo benchmark hiệu năng | Nguyễn Hưng Duy |
 ## 3. Đặc tả bài toán
 
 **Đầu vào**
@@ -75,9 +71,7 @@ trách nhiệm chính và một người kiểm tra chéo.
 
 Tiến độ chi tiết theo từng tuần xem tại [PROGRESS.md](PROGRESS.md).
 
-## 7. Cách chạy
-Sẽ cập nhật khi có mã nguồn.
 
-## 8. Nguồn tham khảo
+## 7. Nguồn tham khảo
 Sẽ cập nhật (giáo trình, sách, bài báo, tài liệu môn học). Mọi nội dung
 mượn sẽ được trích dẫn; nếu có dùng AI, nhóm sẽ khai báo rõ.
