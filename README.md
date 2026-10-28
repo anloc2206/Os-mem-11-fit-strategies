@@ -16,7 +16,7 @@ phân mảnh trong/ngoài và so sánh 3 chiến lược.
 | 1 | Hồ An Lộc | 082207006118    | anloc2206 |
 | 2 | Trần Huy Bảo | 079207005017 |huybaotran307-thb|
 | 3 | Vũ Minh Khôi | 075207011378  | khoiminhvu2303-sudo |
-| 4 | Phạm Minh Tân |  079207043105 |
+| 4 | Phạm Minh Tân |  079207043105 |Pham-Minh-Tan|
 | 5 | Nguyễn Hưng Duy | 079207019278|ngduymeomeo|
 
 ## 2. Phân công công việc
