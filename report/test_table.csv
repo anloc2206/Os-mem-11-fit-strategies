@@ -1,0 +1,25 @@
+﻿test_id,strategy,test_case,input,expected,actual,status
+1,first_fit,Allocate size 1,1,True,True,PASS
+2,first_fit,Allocate size 4,4,True,True,PASS
+3,first_fit,Allocate size 10,10,True,True,PASS
+4,first_fit,Allocate size 100,100,True,True,PASS
+5,first_fit,Allocate size 500,500,True,True,PASS
+6,first_fit,Allocate exceeding memory,1200,False,False,PASS
+7,first_fit,Free existing process,P1,True,True,PASS
+8,first_fit,Free missing process,P999,False,False,PASS
+9,best_fit,Allocate size 1,1,True,True,PASS
+10,best_fit,Allocate size 4,4,True,True,PASS
+11,best_fit,Allocate size 10,10,True,True,PASS
+12,best_fit,Allocate size 100,100,True,True,PASS
+13,best_fit,Allocate size 500,500,True,True,PASS
+14,best_fit,Allocate exceeding memory,1200,False,False,PASS
+15,best_fit,Free existing process,P1,True,True,PASS
+16,best_fit,Free missing process,P999,False,False,PASS
+17,worst_fit,Allocate size 1,1,True,True,PASS
+18,worst_fit,Allocate size 4,4,True,True,PASS
+19,worst_fit,Allocate size 10,10,True,True,PASS
+20,worst_fit,Allocate size 100,100,True,True,PASS
+21,worst_fit,Allocate size 500,500,True,True,PASS
+22,worst_fit,Allocate exceeding memory,1200,False,False,PASS
+23,worst_fit,Free existing process,P1,True,True,PASS
+24,worst_fit,Free missing process,P999,False,False,PASS

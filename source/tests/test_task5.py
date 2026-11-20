@@ -4,9 +4,8 @@ import os
 import tempfile
 import unittest
 
-import io_csv
-import simulator
-
+from source import io_csv
+from source import simulator
 
 class TestReadRequests(unittest.TestCase):
 
