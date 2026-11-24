@@ -102,6 +102,7 @@ class MemorySimApp:
             if total <= 0:
                 raise ValueError
             self.memory_manager = MemoryManager(total)
+            self.requests_data = []
             self.update_display()
             messagebox.showinfo("Thành công", f"Đã tạo bộ nhớ {total} KB.")
         except ValueError:
@@ -124,6 +125,7 @@ class MemorySimApp:
 
         strat = STRATEGIES[self.strategy_var.get()]
         if self.memory_manager.allocate(pid, size, strat):
+            self.requests_data.append(("alloc", pid, size))
             self.update_display()
             self.e_pid.delete(0, tk.END)
             self.e_size.delete(0, tk.END)
@@ -139,6 +141,7 @@ class MemorySimApp:
         if not pid:
             return messagebox.showwarning("Cảnh báo", "Vui lòng nhập PID cần thu hồi!")
         if self.memory_manager.free(pid):
+            self.requests_data.append(("free", pid, None))
             self.update_display()
             self.e_pid.delete(0, tk.END)
             messagebox.showinfo("Thành công", f"Đã thu hồi tiến trình {pid}.")
@@ -167,6 +170,9 @@ class MemorySimApp:
             messagebox.showerror("Lỗi CSV", str(e))
 
     def do_compare(self):
+        if not self.requests_data:
+            return messagebox.showwarning(
+                "Cảnh báo", "Chưa có yêu cầu nào. Hãy nạp CSV hoặc cấp phát thủ công trước.")
         total = (
             sum(b[1] for b in self.memory_manager.snapshot())
             if self.memory_manager
@@ -174,8 +180,6 @@ class MemorySimApp:
         )
         reqs = (
             self.requests_data
-            if self.requests_data
-            else [("alloc", "P1", 100)]
         )
 
         win = tk.Toplevel(self.root)
