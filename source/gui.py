@@ -180,7 +180,7 @@ class MemorySimApp:
 
         win = tk.Toplevel(self.root)
         win.title("So sánh 3 chiến lược")
-        win.geometry("550+250")
+        win.geometry("550x250")
 
         tree = ttk.Treeview(
             win,
