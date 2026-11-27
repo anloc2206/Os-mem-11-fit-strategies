@@ -1,0 +1,13 @@
+n_requests,strategy,repeats,seed,avg_time_ms,min_time_ms,max_time_ms,success_count,external_frag,internal_frag,environment
+100,first_fit,3,42,0.401,0.38,0.431,100,0.0317,49,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+100,best_fit,3,42,0.398,0.378,0.432,100,0.0205,49,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+100,worst_fit,3,42,0.429,0.418,0.44,100,0.1954,49,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+1000,first_fit,3,42,6.621,6.344,6.777,1000,0.0643,90,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+1000,best_fit,3,42,6.6,6.523,6.73,1000,0.0449,90,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+1000,worst_fit,3,42,6.686,6.641,6.73,1000,0.9036,90,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+10000,first_fit,3,42,86.384,84.809,88.653,10000,0.1238,85,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+10000,best_fit,3,42,96.913,84.721,106.221,10000,0.0692,85,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+10000,worst_fit,3,42,87.0,86.582,87.412,10000,0.9412,85,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+100000,first_fit,3,42,902.071,886.549,921.872,100000,0.1347,82,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+100000,best_fit,3,42,913.259,908.971,920.181,100000,0.1208,82,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+100000,worst_fit,3,42,918.795,903.031,932.568,100000,0.9124,82,"Windows 11 | Python 3.14.7 | Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"

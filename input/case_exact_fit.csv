@@ -1,0 +1,6 @@
+action,pid,size
+init,,200
+alloc,P1,80
+alloc,P2,120
+free,P1,
+alloc,P3,80

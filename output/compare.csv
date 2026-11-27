@@ -1,0 +1,4 @@
+workload,strategy,total_memory,total_requests,alloc_success,alloc_fail,free_total,largest_hole,external_frag,internal_frag
+case_ff_vs_wf.csv,first_fit,1200,17,12,1,184,120,0.3478,6
+case_ff_vs_wf.csv,best_fit,1200,17,12,1,96,48,0.5,4
+case_ff_vs_wf.csv,worst_fit,1200,17,12,1,356,200,0.4382,4

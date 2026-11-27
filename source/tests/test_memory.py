@@ -22,10 +22,20 @@ def dummy_first_fit(holes, req_size):
 
 class TestMemoryManager(unittest.TestCase):
 
+    def test_init_requires_multiple_of_unit(self):
+        with self.assertRaises(ValueError):
+            MemoryManager(1001)
+        with self.assertRaises(ValueError):
+            MemoryManager(0)
+        with self.assertRaises(ValueError):
+            MemoryManager(-100)
+        with self.assertRaises(ValueError):
+            MemoryManager(True)
+
     def test_round_to_unit(self):
         m = MemoryManager(1000)
-        self.assertTrue(m.allocate("P1", 5, dummy_first_fit))
-        self.assertEqual(m.snapshot()[0], (0, 8, "P1", 5))
+        self.assertTrue(m.allocate("P1", 13, dummy_first_fit))
+        self.assertEqual(m.snapshot()[0], (0, 16, "P1", 13))
 
     def test_split_hole(self):
         m = MemoryManager(100)
@@ -66,6 +76,10 @@ class TestMemoryManager(unittest.TestCase):
     def test_invalid_inputs(self):
         m = MemoryManager(1000)
         self.assertFalse(m.allocate("P1", -5, dummy_first_fit))
+        self.assertFalse(m.allocate("P1", 0, dummy_first_fit))
+        self.assertFalse(m.allocate("P1", True, dummy_first_fit))
+        self.assertFalse(m.allocate("P1", False, dummy_first_fit))
+        self.assertFalse(m.allocate("P1", 12.5, dummy_first_fit))
         self.assertFalse(m.allocate("", 10, dummy_first_fit))
 
     def test_coalescing_both_sides(self):

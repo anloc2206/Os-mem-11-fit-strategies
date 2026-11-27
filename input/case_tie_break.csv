@@ -1,0 +1,15 @@
+action,pid,size
+init,,1080
+alloc,H1,200
+alloc,K1,20
+alloc,H2,300
+alloc,K2,20
+alloc,H3,200
+alloc,K3,20
+alloc,H4,300
+alloc,K4,20
+free,H1,
+free,H2,
+free,H3,
+free,H4,
+alloc,P_TIE,150

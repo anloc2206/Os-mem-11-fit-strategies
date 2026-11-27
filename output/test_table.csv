@@ -1,0 +1,33 @@
+test_id,category,description,input,expected,actual,status
+TC01,Thường,Oracle 6.1 first_fit size=212,"holes=[100, 500, 200, 300, 600]; size=212",1,1,PASS
+TC02,Thường,Oracle 6.1 best_fit size=212,"holes=[100, 500, 200, 300, 600]; size=212",3,3,PASS
+TC03,Thường,Oracle 6.1 worst_fit size=212,"holes=[100, 500, 200, 300, 600]; size=212",4,4,PASS
+TC04,Thường,Oracle 6.1 first_fit size=417,"holes=[100, 500, 200, 300, 600]; size=417",1,1,PASS
+TC05,Thường,Oracle 6.1 best_fit size=417,"holes=[100, 500, 200, 300, 600]; size=417",1,1,PASS
+TC06,Thường,Oracle 6.1 worst_fit size=417,"holes=[100, 500, 200, 300, 600]; size=417",4,4,PASS
+TC07,Thường,Oracle 6.1 first_fit size=112,"holes=[100, 500, 200, 300, 600]; size=112",1,1,PASS
+TC08,Thường,Oracle 6.1 best_fit size=112,"holes=[100, 500, 200, 300, 600]; size=112",2,2,PASS
+TC09,Thường,Oracle 6.1 worst_fit size=112,"holes=[100, 500, 200, 300, 600]; size=112",4,4,PASS
+TC10,Thường,Oracle 6.1 first_fit size=426,"holes=[100, 500, 200, 300, 600]; size=426",1,1,PASS
+TC11,Thường,Oracle 6.1 best_fit size=426,"holes=[100, 500, 200, 300, 600]; size=426",1,1,PASS
+TC12,Thường,Oracle 6.1 worst_fit size=426,"holes=[100, 500, 200, 300, 600]; size=426",4,4,PASS
+TC13,Biên,Oracle 6.1 first_fit size=100,"holes=[100, 500, 200, 300, 600]; size=100",0,0,PASS
+TC14,Biên,Oracle 6.1 best_fit size=100,"holes=[100, 500, 200, 300, 600]; size=100",0,0,PASS
+TC15,Biên,Oracle 6.1 worst_fit size=100,"holes=[100, 500, 200, 300, 600]; size=100",4,4,PASS
+TC16,Biên,Oracle 6.1 first_fit size=700,"holes=[100, 500, 200, 300, 600]; size=700",,,PASS
+TC17,Biên,Oracle 6.1 best_fit size=700,"holes=[100, 500, 200, 300, 600]; size=700",,,PASS
+TC18,Biên,Oracle 6.1 worst_fit size=700,"holes=[100, 500, 200, 300, 600]; size=700",,,PASS
+TC19,Tie-break,Oracle 6.2 first_fit,"holes=[200, 300, 200, 300]; size=150",0,0,PASS
+TC20,Tie-break,Oracle 6.2 best_fit,"holes=[200, 300, 200, 300]; size=150",0,0,PASS
+TC21,Tie-break,Oracle 6.2 worst_fit,"holes=[200, 300, 200, 300]; size=150",1,1,PASS
+TC22,Thường,Oracle 6.3 external_fragmentation,"[(0, 100, None, 0), (100, 200, 'P1', 190), (300, 300, None, 0)]",0.25,0.25,PASS
+TC23,Thường,Oracle 6.3 internal_fragmentation,"[(0, 100, None, 0), (100, 200, 'P1', 190), (300, 300, None, 0)]",10,10,PASS
+TC24,Biên,Làm tròn lên bội UNIT=4 (13->16),"total=100; alloc(P1,13)","(0, 16, 'P1', 13)","(0, 16, 'P1', 13)",PASS
+TC25,Biên,Exact fit (rem=0),"total=100; alloc(A,100)","[(0, 100, 'A', 100)]","[(0, 100, 'A', 100)]",PASS
+TC26,Dễ sai,Trùng PID,"alloc(P1,40) rồi alloc(P1,60)",False,False,PASS
+TC27,Dễ sai,Free PID không tồn tại,free(P999),False,False,PASS
+TC28,Dễ sai,Gộp hole hai phía,"alloc A,B,C -> free A,C,B","[(0, 400, None, 0)]","[(0, 400, None, 0)]",PASS
+TC29,Biên,Cấp phát lớn hơn tổng bộ nhớ,"total=200; alloc(BIG,250)",False,False,PASS
+TC30,Dễ sai,total_size không chia hết cho UNIT,MemoryManager(1001),ValueError,ValueError,PASS
+TC31,Dễ sai,size là kiểu bool (True),"allocate(P1, True)",False,False,PASS
+TC32,Dễ sai,Đọc file CSV rỗng,input/case_empty.csv,ValueError,ValueError,PASS

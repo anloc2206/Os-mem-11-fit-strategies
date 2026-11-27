@@ -1,8 +1,14 @@
 """Test cho io_csv.py và simulator.py (Task 5)."""
 import csv
 import os
+import sys
 import tempfile
 import unittest
+from pathlib import Path
+
+source_dir = Path(__file__).resolve().parent.parent
+if str(source_dir) not in sys.path:
+    sys.path.insert(0, str(source_dir))
 
 import io_csv
 import simulator
@@ -77,7 +83,6 @@ class TestReadRequests(unittest.TestCase):
 
 class TestSimulator(unittest.TestCase):
 
-    # Ví dụ giáo trình: tạo các lỗ trống 100, 500, 200, 300, 600 rồi cấp 212, 417, 112, 426
     REQUESTS = (
         [("alloc", "P1", 100), ("alloc", "K1", 40), ("alloc", "P2", 500), ("alloc", "K2", 40),
          ("alloc", "P3", 200), ("alloc", "K3", 40), ("alloc", "P4", 300), ("alloc", "K4", 40),
@@ -114,7 +119,7 @@ class TestSimulator(unittest.TestCase):
     def test_write_trace(self):
         trace = simulator.run_simulation(100, [("alloc", "A", 10), ("free", "A", None)], "best_fit")
         with tempfile.TemporaryDirectory() as tmp:
-            path = os.path.join(tmp, "sub", "trace.csv")  # thư mục sub chưa có, hàm phải tự tạo
+            path = os.path.join(tmp, "sub", "trace.csv")
             io_csv.write_trace(path, trace)
             with open(path, newline="", encoding="utf-8") as f:
                 rows = list(csv.reader(f))

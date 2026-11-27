@@ -22,7 +22,8 @@ class MemorySimApp:
 
         self.memory_manager = None
         self.strategy_var = tk.StringVar(value="first_fit")
-        self.requests_data = []
+        self.total = 1000
+        self.history = []
 
         self.setup_style()
         self.build_ui()
@@ -78,18 +79,16 @@ class MemorySimApp:
         style.configure("Treeview.Heading", font=("Segoe UI", 9, "bold"), background="#E2E8F0", foreground="#0F172A")
 
     def build_ui(self):
-        # Thanh tiêu đề
         header = ttk.Frame(self.root)
         header.pack(fill="x", padx=16, pady=(12, 4))
         ttk.Label(header, text="MÔ PHỎNG CẤP PHÁT & QUẢN LÝ BỘ NHỚ", style="Header.TLabel").pack(side="left")
 
-        # Hàng trên: Khung 1 (Khởi tạo) & Khung 3 (File & So sánh)
         top_row = ttk.Frame(self.root)
         top_row.pack(fill="x", padx=16, pady=6)
 
         f1 = ttk.LabelFrame(top_row, text=" 1. Khởi tạo & Cấu hình ", style="Card.TLabelframe", padding=10)
         f1.pack(side="left", fill="both", expand=True, padx=(0, 8))
-        ttk.Label(f1, text="Tổng bộ nhớ (KB):").pack(side="left", padx=(0, 6))
+        ttk.Label(f1, text=f"Tổng bộ nhớ (KB, bội của {UNIT}):").pack(side="left", padx=(0, 6))
         self.e_total = ttk.Entry(f1, width=10)
         self.e_total.pack(side="left", padx=(0, 8))
         self.e_total.insert(0, "1000")
@@ -101,7 +100,6 @@ class MemorySimApp:
         ttk.Button(f3, text="So sánh 3 chiến lược", style="Primary.TButton", command=self.do_compare).pack(side="left", padx=4)
         ttk.Button(f3, text="Xuất Trace CSV", style="Secondary.TButton", command=self.do_export).pack(side="left", padx=4)
 
-        # Khung 2: Thao tác & Chiến lược
         f2 = ttk.LabelFrame(self.root, text=" 2. Thao tác & Chiến lược ", style="Card.TLabelframe", padding=10)
         f2.pack(fill="x", padx=16, pady=6)
 
@@ -125,7 +123,6 @@ class MemorySimApp:
         ttk.Button(f2, text="+ Cấp phát", style="Primary.TButton", command=self.do_alloc).pack(side="left", padx=4)
         ttk.Button(f2, text="- Thu hồi", style="Secondary.TButton", command=self.do_free).pack(side="left", padx=4)
 
-        # Khung 4: Bản đồ Bộ nhớ & Phân mảnh
         f4 = ttk.LabelFrame(self.root, text=" 4. Bản đồ Bộ nhớ & Chỉ số Phân mảnh ", style="Card.TLabelframe", padding=12)
         f4.pack(fill="both", expand=True, padx=16, pady=(6, 14))
 
@@ -133,7 +130,6 @@ class MemorySimApp:
         self.canvas.pack(fill="x", pady=(2, 8))
         self.canvas.bind("<Configure>", lambda _e: self.update_display())
 
-        # Dòng chỉ số & chú thích màu
         info_bar = ttk.Frame(f4, style="Card.TLabelframe")
         info_bar.pack(fill="x", pady=(0, 8))
         self.lbl_metrics = ttk.Label(
@@ -150,7 +146,6 @@ class MemorySimApp:
         tk.Label(legend, text="  ", bg="#E2E8F0", relief="solid", bd=1).pack(side="left", padx=(0, 4))
         ttk.Label(legend, text="Vùng trống (Hole)").pack(side="left")
 
-        # Bảng chi tiết từng block bên dưới bản đồ
         cols = ("idx", "range", "size", "status", "req", "int_frag")
         self.block_tree = ttk.Treeview(f4, columns=cols, show="headings", height=7)
         headers = {
@@ -169,21 +164,29 @@ class MemorySimApp:
 
     def init_default(self):
         try:
-            self.memory_manager = MemoryManager(1000)
+            self.total = 1000
+            self.history = []
+            self.memory_manager = MemoryManager(self.total)
             self.update_display()
         except Exception:
             pass
 
     def do_init(self):
+        raw = self.e_total.get().strip()
+        if not raw:
+            return messagebox.showerror("Lỗi", "Vui lòng nhập tổng dung lượng bộ nhớ!")
         try:
-            total = int(self.e_total.get())
-            if total <= 0:
-                raise ValueError
+            total = int(raw)
+        except ValueError:
+            return messagebox.showerror("Lỗi", "Dung lượng bộ nhớ phải là số nguyên dương!")
+        try:
             self.memory_manager = MemoryManager(total)
+            self.total = total
+            self.history = []
             self.update_display()
             messagebox.showinfo("Thành công", f"Đã tạo bộ nhớ {total} KB.")
-        except ValueError:
-            messagebox.showerror("Lỗi", "Dung lượng bộ nhớ phải là số nguyên lớn hơn 0!")
+        except ValueError as e:
+            messagebox.showerror("Lỗi", str(e))
 
     def do_alloc(self):
         if not self.memory_manager:
@@ -191,11 +194,16 @@ class MemorySimApp:
         pid, size_str = self.e_pid.get().strip(), self.e_size.get().strip()
         if not pid:
             return messagebox.showwarning("Cảnh báo", "PID không được trống!")
+        if not size_str:
+            return messagebox.showwarning("Cảnh báo", "Vui lòng nhập kích thước (Size)!")
         try:
             size = int(size_str)
         except ValueError:
             return messagebox.showerror("Lỗi", "Kích thước (Size) phải là số nguyên!")
+        if size <= 0:
+            return messagebox.showerror("Lỗi", "Kích thước (Size) phải lớn hơn 0!")
 
+        self.history.append(("alloc", pid, size))
         strat = STRATEGIES[self.strategy_var.get()]
         if self.memory_manager.allocate(pid, size, strat):
             self.update_display()
@@ -210,6 +218,8 @@ class MemorySimApp:
         pid = self.e_pid.get().strip()
         if not pid:
             return messagebox.showwarning("Cảnh báo", "Vui lòng nhập PID cần thu hồi!")
+
+        self.history.append(("free", pid, None))
         if self.memory_manager.free(pid):
             self.update_display()
             self.e_pid.delete(0, tk.END)
@@ -224,29 +234,29 @@ class MemorySimApp:
         try:
             total, reqs = io_csv.read_requests(path)
             self.memory_manager = MemoryManager(total)
-            self.requests_data = reqs
+            self.total = total
+            self.history = list(reqs)
+            self.e_total.delete(0, tk.END)
+            self.e_total.insert(0, str(total))
+
             strat = STRATEGIES[self.strategy_var.get()]
-            for act, pid, sz in reqs:
+            for act, pid, sz in self.history:
                 if act == "alloc":
                     self.memory_manager.allocate(pid, sz, strat)
                 elif act == "free":
                     self.memory_manager.free(pid)
             self.update_display()
-            messagebox.showinfo("Thành công", f"Đã nạp thành công {len(reqs)} yêu cầu từ CSV!")
+            messagebox.showinfo("Thành công", f"Đã nạp thành công {len(self.history)} yêu cầu từ CSV!")
         except Exception as e:
             messagebox.showerror("Lỗi CSV", str(e))
 
     def do_compare(self):
-        total = (
-            sum(b[1] for b in self.memory_manager.snapshot())
-            if self.memory_manager
-            else 1000
-        )
-        reqs = self.requests_data if self.requests_data else [("alloc", "P1", 100)]
+        if not self.history:
+            return messagebox.showwarning("Cảnh báo", "Chưa có thao tác hoặc dữ liệu CSV để so sánh!")
 
         win = tk.Toplevel(self.root)
         win.title("So sánh 3 chiến lược")
-        win.geometry("600x240")
+        win.geometry("620x240")
         win.configure(bg="#F4F6F9")
 
         tree = ttk.Treeview(
@@ -260,37 +270,40 @@ class MemorySimApp:
             ("Chiến lược", "Thành công", "Phân mảnh ngoài", "Phân mảnh trong (KB)"),
         ):
             tree.heading(col, text=text)
-            tree.column(col, width=140, anchor="center")
+            tree.column(col, width=145, anchor="center")
         tree.pack(fill="both", expand=True, padx=12, pady=12)
 
-        for name in STRATEGIES:
-            trace = simulator.run_simulation(total, reqs, name)
-            if trace:
-                last = trace[-1]
-                succ = sum(int(r["success"]) for r in trace)
-                tree.insert(
-                    "",
-                    "end",
-                    values=(
-                        name,
-                        f"{succ}/{len(reqs)}",
-                        f"{float(last['external_frag']):.4f}",
-                        last["internal_frag"],
-                    ),
-                )
+        try:
+            for name in STRATEGIES:
+                trace = simulator.run_simulation(self.total, self.history, name)
+                if trace:
+                    last = trace[-1]
+                    succ = sum(int(r["success"]) for r in trace)
+                    tree.insert(
+                        "",
+                        "end",
+                        values=(
+                            name,
+                            f"{succ}/{len(self.history)}",
+                            f"{float(last['external_frag']):.4f}",
+                            last["internal_frag"],
+                        ),
+                    )
+        except Exception as e:
+            win.destroy()
+            messagebox.showerror("Lỗi so sánh", str(e))
 
     def do_export(self):
-        if not self.requests_data:
-            return messagebox.showwarning("Cảnh báo", "Chưa có dữ liệu yêu cầu!")
+        if not self.history:
+            return messagebox.showwarning("Cảnh báo", "Chưa có thao tác hoặc dữ liệu CSV để xuất!")
         path = filedialog.asksaveasfilename(
             defaultextension=".csv", filetypes=[("CSV Files", "*.csv")]
         )
         if not path:
             return
         try:
-            total = sum(b[1] for b in self.memory_manager.snapshot())
             trace = simulator.run_simulation(
-                total, self.requests_data, self.strategy_var.get()
+                self.total, self.history, self.strategy_var.get()
             )
             io_csv.write_trace(path, trace)
             messagebox.showinfo("Thành công", f"Đã xuất file tại:\n{path}")
@@ -303,6 +316,8 @@ class MemorySimApp:
             return
         snap = self.memory_manager.snapshot()
         total = sum(b[1] for b in snap)
+        if total <= 0:
+            return
         w = max(self.canvas.winfo_width(), 820)
 
         x, y1, y2 = 24, 24, 98

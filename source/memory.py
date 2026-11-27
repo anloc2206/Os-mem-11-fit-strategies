@@ -5,14 +5,20 @@ class MemoryManager:
     """Quản lý cấp phát, thu hồi và gộp lỗ trống bộ nhớ."""
 
     def __init__(self, total_size: int, unit: int = UNIT):
-        if total_size <= 0:
-            raise ValueError("Tổng dung lượng bộ nhớ phải lớn hơn 0")
+        if isinstance(total_size, bool) or not isinstance(total_size, int) or total_size <= 0:
+            raise ValueError("Tổng dung lượng bộ nhớ phải là số nguyên lớn hơn 0")
+        if isinstance(unit, bool) or not isinstance(unit, int) or unit <= 0:
+            raise ValueError("Đơn vị cấp phát (unit) phải là số nguyên lớn hơn 0")
+        if total_size % unit != 0:
+            raise ValueError(f"Tổng dung lượng bộ nhớ ({total_size}) phải chia hết cho unit ({unit})")
         self.total_size = total_size
         self.unit = unit
         self.blocks = [{"start": 0, "size": total_size, "pid": None, "requested": 0}]
 
     def allocate(self, pid: str, size: int, strategy) -> bool:
-        if size <= 0 or not pid or any(b["pid"] == pid for b in self.blocks):
+        if isinstance(size, bool) or not isinstance(size, int) or size <= 0:
+            return False
+        if not pid or any(b["pid"] == pid for b in self.blocks):
             return False
 
         aligned_size = ((size + self.unit - 1) // self.unit) * self.unit
@@ -22,7 +28,6 @@ class MemoryManager:
         if chosen_idx is None or chosen_idx < 0 or chosen_idx >= len(holes):
             return False
 
-        # Tìm block lỗ trống tương ứng
         hole_cnt = 0
         for idx, b in enumerate(self.blocks):
             if b["pid"] is None:
@@ -51,7 +56,6 @@ class MemoryManager:
         self.blocks[target_idx]["pid"] = None
         self.blocks[target_idx]["requested"] = 0
 
-        # Gộp các lỗ trống kề nhau
         merged = []
         for b in self.blocks:
             if merged and merged[-1]["pid"] is None and b["pid"] is None:
